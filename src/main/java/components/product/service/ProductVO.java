@@ -1,7 +1,7 @@
 package components.product.service;
 
 
-import components.pagenation.service.PaginationVO;
+import components.util.service.PaginationVO;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)

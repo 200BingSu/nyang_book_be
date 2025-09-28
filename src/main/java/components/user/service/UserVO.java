@@ -1,7 +1,7 @@
 package components.user.service;
 
 
-import components.pagenation.service.PaginationVO;
+import components.util.service.PaginationVO;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,6 +12,7 @@ import lombok.*;
 @ToString
 public class UserVO extends PaginationVO {
     private int user_key;
+    private String user_id;
     private String user_name;
     private String password;
     private String created_at;
