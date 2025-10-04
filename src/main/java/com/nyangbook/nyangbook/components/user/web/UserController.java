@@ -1,8 +1,8 @@
-package components.user.web;
+package com.nyangbook.nyangbook.components.user.web;
 
-import components.user.service.UserService;
-import components.user.service.UserVO;
-import components.util.service.ResponseDTO;
+import com.nyangbook.nyangbook.components.user.service.UserService;
+import com.nyangbook.nyangbook.components.user.service.UserVO;
+import com.nyangbook.nyangbook.components.util.service.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/sign_up")
     public ResponseEntity<ResponseDTO> registerUser (@RequestBody UserVO userVO){
         LOGGER.info("registerUser start ...");
         try{

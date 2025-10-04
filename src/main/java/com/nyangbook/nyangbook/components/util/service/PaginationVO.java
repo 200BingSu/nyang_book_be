@@ -1,4 +1,4 @@
-package components.util.service;
+package com.nyangbook.nyangbook.components.util.service;
 
 
 import lombok.*;

@@ -1,7 +1,7 @@
-package components.user.service;
+package com.nyangbook.nyangbook.components.user.service;
 
 
-import components.util.service.PaginationVO;
+import com.nyangbook.nyangbook.components.util.service.PaginationVO;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)

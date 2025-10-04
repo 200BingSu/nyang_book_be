@@ -1,7 +1,7 @@
-package components.user.service.impl;
+package com.nyangbook.nyangbook.components.user.service.impl;
 
 
-import components.user.service.UserVO;
+import com.nyangbook.nyangbook.components.user.service.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,18 +17,20 @@ public class UserDAO {
     private final PasswordEncoder passwordEncoder;
 
     public UserVO registerUser(UserVO userVO){
+        String userId = userVO.getUser_id();
         String password = userVO.getPassword();
+        System.out.println("userId"+ userId);
+//        System.out.println("passwor"+ password);
         String encodedPassword = passwordEncoder.encode(password);
 
         String sql = "INSERT INTO public.user" +
                 " (user_id, password) " +
                 "VALUES(?, ?)" +
-                "RETURNING";
+                "RETURNING user_id, user_name";
         return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(UserVO.class),
-                userVO.getUser_id(),
-                encodedPassword
+                userId, encodedPassword
         );
 
     }

@@ -1,4 +1,4 @@
-package com.nyangbook.demo;
+package com.nyangbook.nyangbook;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

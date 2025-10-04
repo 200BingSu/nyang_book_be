@@ -1,4 +1,4 @@
-package components.user.service;
+package com.nyangbook.nyangbook.components.user.service;
 
 
 
