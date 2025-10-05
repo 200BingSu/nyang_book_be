@@ -20,13 +20,12 @@ public class UserDAO {
         String userId = userVO.getUser_id();
         String password = userVO.getPassword();
         System.out.println("userId"+ userId);
-//        System.out.println("passwor"+ password);
         String encodedPassword = passwordEncoder.encode(password);
 
         String sql = "INSERT INTO public.user" +
                 " (user_id, password) " +
                 "VALUES(?, ?)" +
-                "RETURNING user_id, user_name";
+                "RETURNING user_id, user_name, user_key";
         return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(UserVO.class),
@@ -34,4 +33,24 @@ public class UserDAO {
         );
 
     }
+
+    // 유저-회원
+    public UserVO selectUserAndPet(UserVO userVO){
+        String usersKey = userVO.getUser_key();
+        String sql = "SELECT u.id, u.email," +
+                "COALESCE(" +
+                "json_agg(to_jsonb(p)) FILTER (WHERE p.pets_key IS NOT NULL)," +
+                "'[]'" +
+                ") AS pets" +
+                "FROM auth.users u" +
+                "LEFT JOIN public.pets p ON p.users_key = u.users_key" +
+                "WHERE 1=1" +
+                "AND u.users_key = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(UserVO.class),
+                usersKey);
+    }
+
+
 }
