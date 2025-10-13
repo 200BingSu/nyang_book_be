@@ -17,14 +17,15 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/sign_up")
-    public ResponseEntity<ResponseDTO> registerUser (@RequestBody UserVO userVO){
-        LOGGER.info("registerUser start ...");
+
+    @PostMapping("/selectUserAndPet")
+    public ResponseEntity<ResponseDTO> selectUserAndPet (@RequestBody UserVO userVO){
+        LOGGER.info("selectUserAndPet start ...");
         try{
-            UserVO result = userService.registerUser(userVO);
-            return ResponseEntity.ok().body(new ResponseDTO("OK", result));
+            UserVO result  = userService.selectUserAndPet(userVO);
+            return ResponseEntity.ok().body(new ResponseDTO<>("OK", result));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new ResponseDTO(false,e.toString()));
+            throw new RuntimeException(e);
         }
     }
 }

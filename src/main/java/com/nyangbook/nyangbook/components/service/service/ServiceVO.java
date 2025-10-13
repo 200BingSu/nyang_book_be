@@ -17,8 +17,10 @@ public class ServiceVO {
     private String service_name;
     private String service_type;
     private String service_en;
+    private int index;
 
     private List<Map<String, Object>> childService;
+    private String childServiceJson;
 
     private int su_key;
     private int ut_key;

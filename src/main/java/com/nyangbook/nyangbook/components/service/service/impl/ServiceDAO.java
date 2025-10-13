@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nyangbook.nyangbook.components.service.service.ServiceVO;
 import com.nyangbook.nyangbook.components.user.service.UserVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -25,35 +26,45 @@ public class ServiceDAO {
         String userType = userVO.getUser_type();
 
         String sql =
-            "SELECT " +
-            "    s.*, " +
-            "    COALESCE( " +
-            "        json_agg(DISTINCT to_jsonb(sr)) FILTER (WHERE sr.parent_service_key IS NOT NULL), " +
-            "        '[]' " +
-            "    ) AS childService " +
-            "FROM public.service s " +
-            "LEFT JOIN public.service_relations sr ON s.service_key = sr.parent_service_key " +
-            "LEFT JOIN public.service_ut su ON su.service_key = s.service_key " +
-            "LEFT JOIN public.users_type ut ON su.ut_key = ut.ut_key ";
+        "SELECT s.*, " +
+        "COALESCE( " +
+        "   ( " +
+        "       SELECT json_agg(js) " +
+        "       FROM ( " +
+        "           SELECT DISTINCT jsonb_build_object( " +
+        "               'service_key', cs.service_key, " +
+        "               'service_name', cs.service_name, " +
+        "               'service_type', cs.service_type, " +
+        "               'service_en', cs.service_en " +
+        "           ) AS js " +
+        "           FROM public.service_relations sr " +
+        "           JOIN public.service cs ON sr.child_service_key = cs.service_key " +
+        "           WHERE sr.parent_service_key = s.service_key " +
+        "       ) sub " +
+        "   ), " +
+        "   '[]' " +
+        ") AS childServiceJson " +
+        "FROM public.service s " +
+        "LEFT JOIN public.service_ut su ON su.service_key = s.service_key " +
+        "WHERE (s.service_type = 'home' OR s.service_type = 'main_menu')" +
+        "GROUP BY s.service_key " +
+        "ORDER BY index";
 
-        List<Object> params = new ArrayList<>();
-        if (userType != null && !userType.isEmpty()) {
-            sql += "WHERE ut.user_type = ? ";
-            params.add(userType);
+
+        try{
+            List<ServiceVO> services = jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(ServiceVO.class)
+            );
+            services.forEach(service -> {
+                service.setChildService(jsonToList(service.getChildServiceJson()));
+            });
+            return services;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<ServiceVO>();
         }
 
-        sql += "GROUP BY s.service_key";
-
-        return jdbcTemplate.query(sql, params.toArray(), (rs, rowNum) -> {
-            ServiceVO vo = new ServiceVO();
-            vo.setService_key((int) rs.getLong("service_key"));
-            vo.setService_name(rs.getString("service_name"));
-            vo.setService_en(rs.getString("service_en"));
-            vo.setService_type(rs.getString("service_type"));
-            // JSON 컬럼 처리
-            vo.setChildService(jsonToList(rs.getString("childService")));
-            return vo;
-        });
     }
 
     // JSON 문자열 → List<Map<String,Object>> 변환

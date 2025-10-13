@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceServiceImpl implements ServiceService {
 
     @Autowired
-    ServiceDAO serviceDAO
+    ServiceDAO serviceDAO;
 
     @Override
     public List<ServiceVO> selectAllServiceWithUserType (UserVO userVO){

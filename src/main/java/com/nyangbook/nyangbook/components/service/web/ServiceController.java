@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("service")
 @RequiredArgsConstructor
 public class ServiceController {
 
@@ -23,7 +23,7 @@ public class ServiceController {
 
      private final ServiceService service;
 
-     @GetMapping("/selectAllServiceWithUserType")
+     @PostMapping("/selectAllServiceWithUserType")
      public ResponseEntity<ResponseDTO> selectAllServiceWithUserType (@RequestBody UserVO user){
          LOGGER.info("[Service] selectAllServiceWithUserType start...");
          try{

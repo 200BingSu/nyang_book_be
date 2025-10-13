@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class UserDAO {
@@ -16,40 +18,23 @@ public class UserDAO {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserVO registerUser(UserVO userVO){
-        String userId = userVO.getUser_id();
-        String password = userVO.getPassword();
-        System.out.println("userId"+ userId);
-        String encodedPassword = passwordEncoder.encode(password);
 
-        String sql = "INSERT INTO public.user" +
-                " (user_id, password) " +
-                "VALUES(?, ?)" +
-                "RETURNING user_id, user_name, user_key";
-        return jdbcTemplate.queryForObject(
-                sql,
-                new BeanPropertyRowMapper<>(UserVO.class),
-                userId, encodedPassword
-        );
 
-    }
-
-    // 유저-회원
+    // 유저 정보
     public UserVO selectUserAndPet(UserVO userVO){
         String usersKey = userVO.getUser_key();
-        String sql = "SELECT u.id, u.email," +
-                "COALESCE(" +
-                "json_agg(to_jsonb(p)) FILTER (WHERE p.pets_key IS NOT NULL)," +
-                "'[]'" +
-                ") AS pets" +
-                "FROM auth.users u" +
-                "LEFT JOIN public.pets p ON p.users_key = u.users_key" +
-                "WHERE 1=1" +
-                "AND u.users_key = ?";
+        UUID uuiUserKey = UUID.fromString(userVO.getUser_key());
+        String sql =
+            "SELECT u.*, uu.uut_key , ut.user_type " +
+                    "FROM auth.users u " +
+                    "LEFT JOIN public.user_ut uu ON uu.user_key  = u.id " +
+                    "LEFT JOIN public.users_type ut ON uu.ut_key  = ut.ut_key " +
+                    "WHERE u.id=?";
+
         return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(UserVO.class),
-                usersKey);
+                uuiUserKey);
     }
 
 
