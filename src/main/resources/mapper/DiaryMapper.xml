@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyangbook.nyangbook.components.diary.DiaryMapper">
+
+    <resultMap id="DiaryResultMap" type="com.nyangbook.nyangbook.components.diary.DiaryVO">
+        <result property="diary_key" column="diary_key"/>
+        <result property="diary_content" column="diary_content"/>
+        <result property="users_key" column="users_key" typeHandler="com.nyangbook.nyangbook.config.UUIDTypeHandler"/>
+        <result property="created_at" column="created_at"/>
+    </resultMap>
+
+
+    <insert id="insertDiary" parameterType="com.nyangbook.nyangbook.components.diary.DiaryVO" useGeneratedKeys="true" keyProperty="diary_key">
+        INSERT INTO public.diary
+        (diary_content, users_key)
+        VALUES(#{diary_content}, #{users_key}::uuid)
+    </insert>
+
+
+    <select id="selectDiaryList"
+            parameterType="com.nyangbook.nyangbook.components.diary.DiaryVO"
+            resultMap="DiaryResultMap">
+        SELECT *
+        FROM public.diary d
+        WHERE 1=1
+        <if test="created_at != null and created_at != ''">
+            AND d.created_at = #{created_at}
+        </if>
+        <if test = "diary_content != null and diary_content != ''">
+            AND d.diary_content ILIKE '%' || #{diary_content} || '%'
+        </if>
+        ORDER BY d.created_at
+    </select>
+</mapper>

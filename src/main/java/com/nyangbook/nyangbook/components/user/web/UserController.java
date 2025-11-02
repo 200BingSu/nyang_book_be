@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("user")
 @RequiredArgsConstructor
 public class UserController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("NyangBook");
 
     private final UserService userService;

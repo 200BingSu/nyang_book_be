@@ -26,29 +26,33 @@ public class ServiceDAO {
         String userType = userVO.getUser_type();
 
         String sql =
-        "SELECT s.*, " +
-        "COALESCE( " +
-        "   ( " +
-        "       SELECT json_agg(js) " +
-        "       FROM ( " +
-        "           SELECT DISTINCT jsonb_build_object( " +
-        "               'service_key', cs.service_key, " +
-        "               'service_name', cs.service_name, " +
-        "               'service_type', cs.service_type, " +
-        "               'service_en', cs.service_en " +
-        "           ) AS js " +
-        "           FROM public.service_relations sr " +
-        "           JOIN public.service cs ON sr.child_service_key = cs.service_key " +
-        "           WHERE sr.parent_service_key = s.service_key " +
-        "       ) sub " +
-        "   ), " +
-        "   '[]' " +
-        ") AS childServiceJson " +
-        "FROM public.service s " +
-        "LEFT JOIN public.service_ut su ON su.service_key = s.service_key " +
-        "WHERE (s.service_type = 'home' OR s.service_type = 'main_menu')" +
-        "GROUP BY s.service_key " +
-        "ORDER BY index";
+            "SELECT s.*, " +
+            "COALESCE( " +
+            "   ( " +
+            "       SELECT json_agg(js ORDER BY (js->>'index')::int) " +
+            "       FROM ( " +
+            "           SELECT jsonb_build_object( " +
+            "               'service_key', cs.service_key, " +
+            "               'service_name', cs.service_name, " +
+            "               'service_en', cs.service_en, " +
+            "               'service_type', cs.service_type, " +
+            "               'index', cs.index, " +
+            "               'icon', cs.icon " +
+            "           ) AS js " +
+            "           FROM public.service_relations sr " +
+            "           JOIN public.service cs ON sr.child_service_key = cs.service_key " +
+            "           WHERE sr.parent_service_key = s.service_key " +
+            "           ORDER BY cs.index " +
+            "       ) sub " +
+            "   ), " +
+            "   '[]' " +
+            ") AS childServiceJson " +
+            "FROM public.service s " +
+            "LEFT JOIN public.service_ut su ON su.service_key = s.service_key " +
+            "WHERE s.service_type IN ('home', 'main_menu') " +
+            "GROUP BY s.service_key " +
+            "ORDER BY s.index";
+
 
 
         try{

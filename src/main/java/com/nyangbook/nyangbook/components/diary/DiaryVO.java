@@ -2,6 +2,7 @@ package com.nyangbook.nyangbook.components.diary;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -13,9 +14,7 @@ public class DiaryVO {
     private int diary_key;
     private String diary_content;
     private String users_key;
-    private String created_at;
+    private LocalDateTime created_at;
 
-    public UUID getUUID (){
-        return UUID.fromString(users_key);
-    }
+
 }

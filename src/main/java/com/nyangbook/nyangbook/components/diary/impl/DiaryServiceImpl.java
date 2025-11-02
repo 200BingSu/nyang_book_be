@@ -1,17 +1,26 @@
 package com.nyangbook.nyangbook.components.diary.impl;
 
+
+import com.nyangbook.nyangbook.components.diary.DiaryMapper;
 import com.nyangbook.nyangbook.components.diary.DiaryService;
 import com.nyangbook.nyangbook.components.diary.DiaryVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
-    @Autowired
-    DiaryDAO diaryDAO;
+    private final DiaryMapper diaryMapper;
+//    private final DiaryDAO diaryDAO;
 
     @Override
-    public DiaryVO insertDiary (DiaryVO diaryVO){
-        return diaryDAO.insertDairy(diaryVO);
+    public DiaryVO postDiary (DiaryVO diaryVO){
+        diaryMapper.insertDiary(diaryVO);
+        return diaryVO;
     }
+    @Override
+    public List<DiaryVO> selectDiaryList(DiaryVO diaryVO){ return diaryMapper.selectDiaryList(diaryVO);};
 }
