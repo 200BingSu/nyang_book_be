@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 public class UserVO extends PaginationVO{
-    private String id;
+    private UUID id;
     private String email;
     private String password;
     private String created_at;
@@ -27,12 +27,7 @@ public class UserVO extends PaginationVO{
 
     private List<PetsVO> petsList;
 
-    public UUID getUUID (){
-        if (id == null || id.isBlank()) {
-            return null;
-        }
-        return UUID.fromString(id);
-    }
+
 
 
 }

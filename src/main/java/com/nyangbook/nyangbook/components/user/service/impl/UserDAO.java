@@ -22,8 +22,7 @@ public class UserDAO {
 
     // 유저 정보
     public UserVO selectUserAndPet(UserVO userVO){
-        String id = userVO.getId();
-        UUID uuiUserKey = UUID.fromString(id);
+        UUID id = userVO.getId();
         String sql =
             "SELECT u.*, uu.uut_key , ut.user_type " +
                     "FROM auth.users u " +
@@ -34,7 +33,7 @@ public class UserDAO {
         return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(UserVO.class),
-                uuiUserKey);
+                id);
     }
 
 
