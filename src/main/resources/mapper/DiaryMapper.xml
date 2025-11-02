@@ -1,0 +1,13 @@
+<mapper namespace="com.nyangbook.nyangbook.components.diary.impl.DiaryDAO">
+    <select id="selectDiaryList"
+            parameterType="com.nyangbook.nyangbook.components.diary.DiaryVO"
+            resultType="com.nyangbook.nyangbook.components.diary.DiaryVO">
+        SELECT *
+        FROM public.diary d
+        WHERE 1=1
+        AND d.users_key = #{users_key}
+        <if test="created_at != null and created_at != ''">
+            d.created_at = #{created_at}
+        </if>
+    </select>
+</mapper>
