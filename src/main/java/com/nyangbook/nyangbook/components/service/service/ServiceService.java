@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ServiceService {
     List<ServiceVO> selectAllServiceWithUserType (UserVO userVO);
+    List<ServiceVO> selectSerivceWithText (ServiceVO serviceVO);
 }

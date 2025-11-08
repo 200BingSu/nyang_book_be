@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyangbook.nyangbook.components.service.ServiceMapper">
+
+    <resultMap id="ServiceResultMap" type="com.nyangbook.nyangbook.components.service.service.ServiceVO">
+        <result property="service_key" column="service_key"/>
+        <result property="service_name" column="service_name"/>
+        <result property="service_type" column="service_type" />
+        <result property="service_en" column="service_en"/>
+        <result property="index" column="index"/>
+        <result property="icon" column="icon"/>
+        <result property="su_key" column="su_key"/>
+        <result property="ut_key" column="ut_key"/>
+        <result property="ut_key" column="user_type"/>
+    </resultMap>
+
+    <select id="selectServiceWithText" parameterType="map" resultMap="ServiceResultMap">
+        SELECT *
+        FROM public.service s
+        WHERE s.service_name ILIKE '%' || #{service_name} || '%';
+    </select>
+
+</mapper>
