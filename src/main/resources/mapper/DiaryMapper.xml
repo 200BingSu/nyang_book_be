@@ -32,4 +32,16 @@
         </if>
         ORDER BY d.created_at
     </select>
+
+    <update id="updateDiary" parameterType="map">
+        UPDATE public.diary
+        SET diary_content = #{diary_content},
+            updated_at = #{updated_at}
+        WHERE diary_key = #{diary_key}
+    </update>
+
+    <delete id="deleteDiary" parameterType="map">
+        DELETE FROM public.diary
+        WHERE diary_key = #{diary_key}
+    </delete>
 </mapper>

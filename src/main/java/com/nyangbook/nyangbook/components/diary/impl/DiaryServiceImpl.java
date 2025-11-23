@@ -23,4 +23,9 @@ public class DiaryServiceImpl implements DiaryService {
     }
     @Override
     public List<DiaryVO> selectDiaryList(DiaryVO diaryVO){ return diaryMapper.selectDiaryList(diaryVO);};
+
+    @Override
+    public void updateDiary (DiaryVO diaryVO){diaryMapper.updateDiary(diaryVO);};
+    @Override
+    public void deleteDiary (DiaryVO diaryVO){diaryMapper.deleteDiary(diaryVO);};
 }

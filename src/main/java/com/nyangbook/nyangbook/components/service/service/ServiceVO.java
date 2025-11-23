@@ -23,6 +23,15 @@ public class ServiceVO {
     private List<Map<String, Object>> childService;
     private String childServiceJson;
 
+
+    private int parent_service_key;
+    private String parent_service_name;
+    private String parent_service_en;
+
+    private int child_service_key;
+    private String child_service_name;
+    private String child_service_en;
+
     private int su_key;
     private int ut_key;
     private String user_type;
