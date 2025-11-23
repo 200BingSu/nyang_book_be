@@ -34,7 +34,7 @@ public class DiarySchedular {
      @PostConstruct
     public void init() {
          // 서버 킬 때 바로 실행
-        insertTodayDiary();
+//        insertTodayDiary();
     }
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();

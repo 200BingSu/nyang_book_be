@@ -7,4 +7,6 @@ import java.util.Objects;
 public interface DiaryService {
     DiaryVO postDiary(DiaryVO diaryVO);
     List<DiaryVO> selectDiaryList(DiaryVO diaryVO);
+    void updateDiary (DiaryVO diaryVO);
+    void deleteDiary (DiaryVO diaryVO);
 }

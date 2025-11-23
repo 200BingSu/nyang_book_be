@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyangbook.nyangbook.components.service.ServiceMapper">
+
+    <resultMap id="ServiceResultMap" type="com.nyangbook.nyangbook.components.service.service.ServiceVO">
+        <result property="service_key" column="service_key"/>
+        <result property="service_name" column="service_name"/>
+        <result property="service_type" column="service_type" />
+        <result property="service_en" column="service_en"/>
+        <result property="index" column="index"/>
+        <result property="icon" column="icon"/>
+        <result property="parent_service_key" column="parent_service_key"/>
+        <result property="parent_service_en" column="parent_service_en"/>
+        <result property="parent_service_name" column="parent_service_name"/>
+        <result property="child_service_key" column="child_service_key"/>
+        <result property="child_service_name" column="child_service_name"/>
+        <result property="child_service_en" column="child_service_en"/>
+        <result property="su_key" column="su_key"/>
+        <result property="ut_key" column="ut_key"/>
+        <result property="ut_key" column="user_type"/>
+    </resultMap>
+
+    <select id="selectServiceWithText" parameterType="map" resultMap="ServiceResultMap">
+        SELECT DISTINCT
+            s.service_key,
+            s.service_name,
+            s.service_type,
+            s.service_en,
+            s.index,
+            s.icon,
+            sr.child_service_key,
+            s2.service_key AS parent_service_key,
+            s2.service_name AS parent_service_name,
+            s2.service_en   AS parent_service_en,
+            s3.service_name AS child_service_name,
+            s3.service_en   AS child_service_en
+        FROM public.service s
+        LEFT JOIN public.service_relations sr
+            ON (sr.parent_service_key = s.service_key OR sr.child_service_key = s.service_key)
+        LEFT JOIN public.service s2
+            ON s2.service_key = sr.parent_service_key
+        LEFT JOIN public.service s3
+            ON s3.service_key = sr.child_service_key
+        WHERE (s.service_type = 'main_menu' OR s.service_type = 'sub_menu')
+          AND s.service_name ILIKE '%' || TRIM(#{service_name}) || '%'
+        ORDER BY s.service_name, s2.service_name
+    </select>
+
+
+
+</mapper>

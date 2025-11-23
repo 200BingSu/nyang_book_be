@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyangbook.nyangbook.components.product.ProductMapper">
+
+    <insert id="insertProduct" parameterType="map" useGeneratedKeys="true" keyProperty="product_key">
+        INSERT INTO public.product
+        (product_name
+        <if test="brand_key != null and brand_key !=0">, brand_key</if>
+        <if test="type_key != null and type_key !=0">, type_key</if>
+        <if test="attributes_key != null and attributes_key !=0">, attributes_key</if>
+        <if test="taste_key != null and taste_key !=0">, taste_key</if>)
+        VALUES(#{product_name}
+        <if test="brand_key != null and brand_key !=0">, #{brand_key}</if>
+        <if test="type_key != null and type_key !=0">, #{type_key}</if>
+        <if test="attributes_key != null and attributes_key !=0">, #{attributes_key}</if>
+        <if test="taste_key != null and taste_key !=0">, #{taste_key}</if>);
+    </insert>
+
+    <insert id="insertAttributes" parameterType="map" useGeneratedKeys="true" keyProperty="attributes_key">
+        INSERT INTO public.product_attributes (attributes_name) VALUES(#{attributes_name});
+    </insert>
+
+    <insert id="insertTaste" parameterType="map" useGeneratedKeys="true" keyProperty="taste_key">
+        INSERT INTO public.product_taste (taste_name) VALUES(#{taste_name});
+    </insert>
+
+    <insert id="insertType" parameterType="map" useGeneratedKeys="true" keyProperty="type_key">
+        INSERT INTO public.product_type (type_name) VALUES(#{type_name});
+    </insert>
+
+    <insert id="insertBrand" parameterType="map" useGeneratedKeys="true" keyProperty="brand_key">
+        INSERT INTO public.brand (brand_name) VALUES(#{brand_name});
+    </insert>
+
+    <insert id="insertPurchases" parameterType="map" useGeneratedKeys="true" keyProperty="purchases_key">
+        INSERT INTO public.purchases
+        (product_key, like_point, users_key)
+        VALUES(#{product_key}, #{like_point}, #{users_key}::uuid);
+    </insert>
+
+
+    <select id="selectProducts"
+            parameterType="map"
+            resultType="map">
+        SELECT *
+        FROM public.product p
+        LEFT JOIN public.brand b ON b.brand_key = p.brand_key
+        LEFT JOIN public.product_type pt ON pt.type_key = p.type_key
+        LEFT JOIN public.product_attributes pa ON pa.attributes_key = p.attributes_key
+        LEFT JOIN public.product_taste ptt ON ptt.taste_key = p.taste_key
+        WHERE 1=1
+        <if test="created_at != null and created_at != ''">
+            AND p.created_at = #{created_at}
+        </if>
+        <if test = "product_name != null and product_name != ''">
+            AND p.product_name ILIKE '%' || #{product_name} || '%'
+        </if>
+        <if test="brand_key != null and brand_key != 0">
+            AND brand_key = #{brand_key}
+        </if>
+        <if test="type_key != null and type_key != 0">
+            AND type_key = #{type_key}
+        </if>
+        <if test="attributes_key != null and attributes_key != 0">
+            AND attributes_key = #{attributes_key}
+        </if>
+        <if test="taste_key != null and taste_key != 0">
+            AND taste_key = #{taste_key}
+        </if>
+        ORDER BY p.created_at
+    </select>
+
+    <update id="updateData" parameterType="map">
+        UPDATE public.product
+        <set>
+            <if test="product_name != null and product_name != ''">
+                product_name = #{product_name}
+            </if>
+            <if test="brand_key != null and brand_key != 0">
+                brand_key = #{brand_key}
+            </if>
+            <if test="type_key != null and type_key != 0">
+                type_key = #{type_key}
+            </if>
+            <if test="attributes_key != null and attributes_key != 0">
+                attributes_key = #{attributes_key}
+            </if>
+            <if test="taste_key != null and taste_key != 0">
+                taste_key = #{taste_key}
+            </if>
+        </set>
+        WHERE product_key = #{product_key}
+    </update>
+
+
+    <delete id="deleteData" parameterType="map">
+        DELETE FROM public.product
+        WHERE product_key = #{product_key}
+    </delete>
+</mapper>

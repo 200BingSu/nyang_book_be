@@ -11,5 +11,7 @@ public interface DiaryMapper {
 
     int insertDiary(DiaryVO diaryVO);
     List<DiaryVO> selectDiaryList(DiaryVO diaryVO);
+    void updateDiary (DiaryVO diaryVO);
+    void deleteDiary (DiaryVO diaryVO);
 }
 
